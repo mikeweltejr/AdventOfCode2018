@@ -50,3 +50,30 @@ func (f frequency) sum() int {
 
 	return sum
 }
+
+func (f frequency) checkForDuplicateFrequency(sum int, allFrequencies []int) {
+	dup := 0
+	dupFound := false
+
+	fmt.Println("Calibrating...")
+
+	for _, freq := range f {
+		sum += freq
+		for _, s := range allFrequencies {
+			if s == sum {
+				dup = s
+				dupFound = true
+				fmt.Println("Dup:", dup)
+				break
+			}
+		}
+		if dupFound {
+			break
+		}
+		allFrequencies = append(allFrequencies, sum)
+	}
+
+	if !dupFound {
+		f.checkForDuplicateFrequency(sum, allFrequencies)
+	}
+}

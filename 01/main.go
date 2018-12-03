@@ -1,8 +1,7 @@
 package main
 
-import "fmt"
-
 func main() {
+	blankFreq := []int{}
 	frequency := newFrequencyFromFile("frequency.txt")
-	fmt.Println(frequency.sum())
+	frequency.checkForDuplicateFrequency(0, blankFreq)
 }
