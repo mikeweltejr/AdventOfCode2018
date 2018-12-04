@@ -8,8 +8,16 @@ import (
 	"strings"
 )
 
+type claim struct {
+	id     int
+	top    int
+	left   int
+	length int
+	height int
+}
 type elfFabric []string
 
+var claims = []claim{}
 var graphPoints = [][]int{}
 var graph = [1000][1000]string{}
 
@@ -30,45 +38,11 @@ func (e elfFabric) print() {
 	}
 }
 
-func calculateUniqueness(e elfFabric) int {
+func calculateUniqueness(c []claim) int {
 	uniqueID := 0
 
-	for _, f := range e {
-		fabric := strings.Split(f, " ")
-
-		id, err0 := strconv.Atoi(strings.Split(fabric[0], "#")[1])
-		if err0 != nil {
-			fmt.Println("Error:", err0)
-			os.Exit(1)
-		}
-
-		left, err1 := strconv.Atoi(strings.Split(fabric[2], ",")[0])
-
-		if err1 != nil {
-			fmt.Println("Error:", err1)
-			os.Exit(1)
-		}
-
-		topStr := strings.Split(fabric[2], ",")[1]
-		top, err2 := strconv.Atoi(topStr[:len(topStr)-1])
-		if err2 != nil {
-			fmt.Println("Error:", err2)
-			os.Exit(1)
-		}
-
-		length, err3 := strconv.Atoi(strings.Split(fabric[3], "x")[0])
-		if err3 != nil {
-			fmt.Println("Error:", err3)
-			os.Exit(1)
-		}
-
-		height, err4 := strconv.Atoi(strings.Split(fabric[3], "x")[1])
-		if err4 != nil {
-			fmt.Println("Error", err4)
-			os.Exit(1)
-		}
-
-		uniqueID = getUniqueID(left, top, length, height, id)
+	for _, claim := range c {
+		uniqueID = getUniqueID(claim.left, claim.top, claim.length, claim.height, claim.id)
 
 		if uniqueID != 0 {
 			fmt.Println("UniqueId:", uniqueID)
@@ -117,11 +91,12 @@ func (e elfFabric) getSharedSquareInches() int {
 			os.Exit(1)
 		}
 
+		claims = append(claims, claim{id: id, top: top, left: left, length: length, height: height})
 		calculatePoints(left, top, length, height, id)
 	}
 
 	commonPoints := totalSquareInchesInCommon(graphPoints)
-	calculateUniqueness(e)
+	calculateUniqueness(claims)
 	return commonPoints
 }
 
@@ -189,30 +164,3 @@ func createGraph() [1000][1000]string {
 
 	return g
 }
-
-// func totalSquareInchesInCommon(points []graph) int {
-// 	for i := 0; i < len(points); i++ {
-// 		fmt.Println("i:", i)
-// 		for j := i + 1; j < len(points); j++ {
-// 			if reflect.DeepEqual(points[i], points[j]) {
-// 				if !pointExists(overlappedPoints, points[i]) {
-// 					overlappedPoints = append(overlappedPoints, points[i])
-// 					fmt.Println(len(overlappedPoints))
-// 				}
-// 			}
-// 		}
-// 	}
-
-// 	return len(overlappedPoints)
-// }
-
-// func pointExists(points []graph, point graph) bool {
-// 	for i := 0; i < len(points); i++ {
-// 		p := points[i]
-// 		if reflect.DeepEqual(p, point) {
-// 			return true
-// 		}
-// 	}
-
-// 	return false
-// }
