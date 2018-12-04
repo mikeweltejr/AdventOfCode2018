@@ -12,7 +12,6 @@ type elfFabric []string
 
 var graphPoints = [][]int{}
 var graph = [1000][1000]string{}
-var uniqueId int = 0
 
 func newFabricFromFile(filename string) elfFabric {
 	bs, err := ioutil.ReadFile(filename)
