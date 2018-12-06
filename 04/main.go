@@ -12,4 +12,7 @@ func main() {
 
 	fmt.Println("GuardID:", guardID, "HighestMin:", highestMin)
 	fmt.Println("Answer:", guardID*highestMin)
+	countHighMinForAllGuards(gShifts)
+	// guardMins := countHighMinForAllGuards(gShifts)
+	// fmt.Println("GuardMins", guardMins)
 }

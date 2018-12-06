@@ -127,7 +127,6 @@ func determineTotalMinutesSlept(g guardShifts) [5000]int {
 		if gShift.action == 3 {
 			totalTimeSlept = gShift.minute - startMin
 			guards[guardID] += totalTimeSlept
-			//fmt.Println("GuardID:", guardID, "TotalTime:", totalTimeSlept)
 		}
 	}
 
@@ -168,6 +167,43 @@ func countMinuteOfHighGuard(g guardShifts, guardID int) [59]int {
 	}
 
 	return minutes
+}
+
+func countHighMinForAllGuards(g guardShifts) {
+	minutes := [5000][60]int{}
+	startMin := 0
+	guardID := 0
+
+	for i := 0; i < len(g); i++ {
+		gShift := g[i]
+		if gShift.action == 1 {
+			guardID = gShift.id
+		}
+		if gShift.action == 2 {
+			startMin = gShift.minute
+		}
+		if gShift.action == 3 {
+			for i := startMin; i < gShift.minute; i++ {
+				minutes[guardID][i]++
+			}
+		}
+	}
+
+	highestMin := 0
+	highestMinCount := 0
+
+	for i := 0; i < len(minutes); i++ {
+		for j := 0; j < len(minutes[i]); j++ {
+			if minutes[i][j] > highestMinCount {
+				highestMin = j
+				highestMinCount = minutes[i][j]
+				guardID = i
+			}
+		}
+	}
+	fmt.Println("GuardID:", guardID, "HighestMin:", highestMin)
+	fmt.Println("Answer2:", guardID*highestMin)
+	//return minutes
 }
 
 func findMostFrequentMin(minutes [59]int) int {
