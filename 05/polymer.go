@@ -3,7 +3,10 @@ package main
 import (
 	"fmt"
 	"io/ioutil"
+	"log"
 	"os"
+	"regexp"
+	"strconv"
 	"unicode"
 )
 
@@ -24,7 +27,7 @@ func checkForPolymer(polymer []rune, pos int) {
 	}
 	for i := pos; i < len(polymer); i++ {
 		if i+1 >= len(polymer) {
-			fmt.Println("Answer:", string(polymer), "Length:", len(polymer))
+			fmt.Println("Answer:", "Length:", len(polymer))
 			break
 		}
 
@@ -37,4 +40,31 @@ func checkForPolymer(polymer []rune, pos int) {
 			break
 		}
 	}
+}
+
+func removeElements() {
+	for i := 65; i < 91; i++ {
+		polymer := newPolymerFromFile("polymer.txt")
+
+		reg, err := regexp.Compile("[" + strconv.QuoteRune(rune(i)) + "" + strconv.QuoteRune(rune(i+32)) + "]")
+		if err != nil {
+			log.Fatal(err)
+		}
+		processedPolymer := reg.ReplaceAllString(polymer, "")
+
+		fmt.Println("For Letters:", strconv.QuoteRune(rune(i)), strconv.QuoteRune(rune(i+32)))
+		checkForPolymer([]rune(processedPolymer), 0)
+	}
+}
+
+func removeUpperAndLower(polymer []rune, upperChar int, lowerChar int) []rune {
+	fmt.Println(upperChar, lowerChar)
+	for i := 0; i < len(polymer); i++ {
+		if int(polymer[i]) == upperChar || int(polymer[i]) == lowerChar {
+			fmt.Println("REMOVING")
+			polymer = append(polymer[:i], polymer[i+1:]...)
+		}
+	}
+
+	return polymer
 }
